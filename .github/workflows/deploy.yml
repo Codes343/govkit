@@ -2,14 +2,14 @@ name: Deploy actors
 
 # Push to master -> every actor is rebuilt and redeployed to Apify. There is no
 # manual deploy step, because there is no human to perform one.
+# No `paths:` filter here on purpose. It saved nothing (Actions minutes are
+# unlimited on public repos, and nearly every commit touches src/ or actors/
+# anyway) and it cost something real: GitHub only indexes a workflow once a push
+# actually triggers it, so a path-filtered workflow on a repo's first push can
+# stay invisible in the Actions tab with no "Run workflow" button.
 on:
   push:
     branches: [master, main]
-    paths:
-      - "src/**"
-      - "actors/**"
-      - "scripts/build_actor.py"
-      - ".github/workflows/deploy.yml"
   workflow_dispatch:
     inputs:
       actor:
@@ -19,9 +19,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Without the token there is nothing to deploy to; skip rather than fail red
-    # for anyone who forks the repo.
-    if: github.repository_owner != ''
     steps:
       - uses: actions/checkout@v4
 

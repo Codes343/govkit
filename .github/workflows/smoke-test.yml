@@ -2,6 +2,11 @@ name: Upstream smoke test
 
 # The business has no staff. This workflow is the entire monitoring department:
 # if a government API changes shape or goes down, it files the ticket itself.
+#
+# OPERATIONAL RISK: GitHub disables scheduled workflows after 60 days with no
+# repository activity. A business designed to need no attention can trip this
+# and lose its monitoring silently. Any commit resets the clock; if the repo
+# ever goes quiet for two months, check the Actions tab and re-enable.
 on:
   schedule:
     - cron: "0 6 * * *"

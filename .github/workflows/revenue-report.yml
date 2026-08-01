@@ -1,5 +1,8 @@
 name: Weekly revenue report
 
+# Like the smoke test, this is disabled by GitHub after 60 days of repository
+# inactivity. If the weekly report stops arriving, that is the first thing to
+# check - the silence is the symptom.
 on:
   schedule:
     - cron: "0 13 * * 1" # Mondays

@@ -203,6 +203,17 @@ I'll update the cross-links, then build the remaining three actors
 | Every Monday, 13:00 UTC | Revenue and traction report posted to a GitHub tracking issue |
 | Monthly, the 11th | Apify pays out |
 
+## The 60-day trap
+
+GitHub **disables scheduled workflows after 60 days with no repository
+activity**. That is a real hazard here specifically because the business is
+designed to need no attention: if nothing is committed for two months, the
+daily smoke test and the weekly revenue report are switched off, and nothing
+tells you. The symptom is silence — the Monday report simply stops arriving.
+
+If that happens: Actions tab → the workflow → **Enable workflow**. Any commit
+resets the 60-day clock.
+
 ## The one thing to watch
 
 Check the **Issues** tab on the Apify Store page for each actor every couple of
