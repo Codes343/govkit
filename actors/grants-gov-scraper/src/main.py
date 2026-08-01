@@ -6,6 +6,7 @@ import logging
 
 from apify import Actor
 
+from govkit import inputs
 from govkit.billing import Billing
 from govkit.http import GovKitClient, UpstreamError
 from govkit.sources import grants_gov
@@ -16,26 +17,12 @@ DEFAULT_MAX_ITEMS = 1000
 HARD_MAX_ITEMS = 50_000
 
 
-def _as_list(value: object) -> list[str] | None:
-    """Accept either a real array or a comma-separated string from the input."""
-    if value is None:
-        return None
-    if isinstance(value, str):
-        parts = [p.strip() for p in value.split(",")]
-    elif isinstance(value, list):
-        parts = [str(p).strip() for p in value]
-    else:
-        return None
-    parts = [p for p in parts if p]
-    return parts or None
-
-
 async def main() -> None:
     async with Actor:
         raw = await Actor.get_input() or {}
 
-        statuses = _as_list(raw.get("oppStatuses")) or ["posted", "forecasted"]
-        invalid = [s for s in statuses if s not in grants_gov.VALID_STATUSES]
+        statuses = inputs.as_list(raw.get("oppStatuses")) or ["posted", "forecasted"]
+        invalid = inputs.invalid_choices(statuses, grants_gov.VALID_STATUSES)
         if invalid:
             await Actor.fail(
                 status_message=(
@@ -45,23 +32,23 @@ async def main() -> None:
             )
             return
 
-        max_items = raw.get("maxItems") or DEFAULT_MAX_ITEMS
-        try:
-            max_items = max(1, min(int(max_items), HARD_MAX_ITEMS))
-        except (TypeError, ValueError):
-            max_items = DEFAULT_MAX_ITEMS
-
+        max_items = inputs.as_int(
+            raw.get("maxItems"),
+            default=DEFAULT_MAX_ITEMS,
+            minimum=1,
+            maximum=HARD_MAX_ITEMS,
+        )
         include_details = bool(raw.get("includeDetails", True))
 
         filters = {
-            "keyword": (raw.get("keyword") or "").strip() or None,
+            "keyword": inputs.as_text(raw.get("keyword")),
             "statuses": statuses,
-            "agencies": _as_list(raw.get("agencies")),
-            "eligibilities": _as_list(raw.get("eligibilities")),
-            "funding_categories": _as_list(raw.get("fundingCategories")),
-            "funding_instruments": _as_list(raw.get("fundingInstruments")),
-            "aln": (raw.get("aln") or "").strip() or None,
-            "opportunity_number": (raw.get("opportunityNumber") or "").strip() or None,
+            "agencies": inputs.as_list(raw.get("agencies")),
+            "eligibilities": inputs.as_list(raw.get("eligibilities")),
+            "funding_categories": inputs.as_list(raw.get("fundingCategories")),
+            "funding_instruments": inputs.as_list(raw.get("fundingInstruments")),
+            "aln": inputs.as_text(raw.get("aln")),
+            "opportunity_number": inputs.as_text(raw.get("opportunityNumber")),
         }
 
         billing = Billing(Actor)
@@ -78,7 +65,6 @@ async def main() -> None:
 
                     accepted = await billing.push_many(page)
                     total += accepted
-
                     logger.info("Pushed %d opportunities (%d total)", accepted, total)
 
                     if billing.limit_reached:

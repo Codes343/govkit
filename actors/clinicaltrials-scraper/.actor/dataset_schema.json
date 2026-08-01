@@ -1,0 +1,36 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Clinical studies",
+      "transformation": {
+        "fields": [
+          "briefTitle",
+          "overallStatus",
+          "phases",
+          "conditions",
+          "leadSponsor",
+          "enrollmentCount",
+          "startDate",
+          "nctId",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "briefTitle": { "label": "Study" },
+          "overallStatus": { "label": "Status" },
+          "phases": { "label": "Phase" },
+          "conditions": { "label": "Conditions" },
+          "leadSponsor": { "label": "Sponsor" },
+          "enrollmentCount": { "label": "Enrollment" },
+          "startDate": { "label": "Start" },
+          "nctId": { "label": "NCT ID" },
+          "url": { "label": "Link", "format": "link" }
+        }
+      }
+    }
+  }
+}

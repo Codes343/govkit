@@ -1,0 +1,92 @@
+{
+  "title": "FDA Recalls & Enforcement Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "categories": {
+      "title": "Product categories",
+      "type": "array",
+      "description": "Which FDA enforcement datasets to search. Leave empty for all three.",
+      "editor": "select",
+      "default": ["food"],
+      "items": {
+        "type": "string",
+        "enum": ["food", "drug", "device"],
+        "enumTitles": [
+          "Food — food and dietary supplements",
+          "Drug — human and animal drugs",
+          "Device — medical devices"
+        ]
+      }
+    },
+    "reportedAfter": {
+      "title": "Reported on or after",
+      "type": "string",
+      "description": "ISO date, e.g. \"2026-01-01\". Filters on the FDA report date.",
+      "editor": "datepicker",
+      "prefill": "2026-01-01"
+    },
+    "reportedBefore": {
+      "title": "Reported on or before",
+      "type": "string",
+      "description": "ISO date, e.g. \"2026-12-31\".",
+      "editor": "datepicker"
+    },
+    "classifications": {
+      "title": "Recall classification",
+      "type": "array",
+      "description": "FDA severity class. Class I is the most serious.",
+      "editor": "select",
+      "items": {
+        "type": "string",
+        "enum": ["Class I", "Class II", "Class III"],
+        "enumTitles": [
+          "Class I — serious health consequences or death",
+          "Class II — temporary or reversible consequences",
+          "Class III — unlikely to cause adverse consequences"
+        ]
+      }
+    },
+    "statuses": {
+      "title": "Recall status",
+      "type": "array",
+      "description": "Where the recall stands today.",
+      "editor": "select",
+      "items": {
+        "type": "string",
+        "enum": ["Ongoing", "Completed", "Terminated", "Pending"],
+        "enumTitles": [
+          "Ongoing — still in progress",
+          "Completed — all product accounted for",
+          "Terminated — closed by FDA",
+          "Pending — not yet classified"
+        ]
+      }
+    },
+    "maxItems": {
+      "title": "Maximum results",
+      "type": "integer",
+      "description": "Stop after this many recall records. Maximum 50000.",
+      "default": 1000,
+      "minimum": 1,
+      "maximum": 50000,
+      "unit": "recalls"
+    },
+    "recallingFirm": {
+      "title": "Recalling firm",
+      "type": "string",
+      "description": "Match a specific company, e.g. \"Abbott\".",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters",
+      "sectionDescription": "All optional. Filters combine with AND."
+    },
+    "keyword": {
+      "title": "Keyword",
+      "type": "string",
+      "description": "Search the recall reason and product description, e.g. \"listeria\", \"undeclared peanut\".",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters"
+    }
+  },
+  "required": []
+}

@@ -125,7 +125,9 @@ with `APIFY_TOKEN` set in your environment.)*
 ## 5. Turn on monetization and set the prices — 15 min
 
 This is the step that makes it a business rather than a hobby. Do it for
-**each** of the two actors.
+**each** of the five actors — `grants-gov-scraper`, `federal-register-scraper`,
+`usaspending-scraper`, `openfda-recalls-scraper`, `clinicaltrials-scraper`.
+Same two events, same prices, every time.
 
 In Apify Console → **Actors → `grants-gov-scraper` → Publication →
 Monetization**:
@@ -179,6 +181,27 @@ Copy these in verbatim.
   `Federal Register Scraper - Rules, Notices & Regulations Data API`
 - **SEO description:**
   `Extract Federal Register documents: proposed rules, final rules, notices and presidential documents with agencies, dockets, RINs, CFR references and comment deadlines. Export to JSON, CSV or Excel.`
+
+### `usaspending-scraper`
+
+- **SEO title:**
+  `USAspending Scraper - Federal Contract & Grant Award Data API`
+- **SEO description:**
+  `Extract US federal contract, grant and loan awards from USAspending.gov: recipient, award amount, awarding agency, period of performance and description. Export to JSON, CSV, Excel or Google Sheets. No API key needed.`
+
+### `openfda-recalls-scraper`
+
+- **SEO title:**
+  `FDA Recalls Scraper - Food, Drug & Device Enforcement Data API`
+- **SEO description:**
+  `Extract FDA recall and enforcement reports for food, drugs and medical devices: recall class, reason for recall, recalling firm, product description, distribution pattern and dates. Export to JSON, CSV or Excel.`
+
+### `clinicaltrials-scraper`
+
+- **SEO title:**
+  `ClinicalTrials.gov Scraper - Clinical Trial Data API & Export`
+- **SEO description:**
+  `Extract clinical studies from ClinicalTrials.gov: condition, phase, recruitment status, sponsor, enrollment, interventions, eligibility and locations - flattened to one row per study. Export to JSON, CSV or Excel.`
 
 ---
 

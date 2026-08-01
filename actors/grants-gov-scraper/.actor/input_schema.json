@@ -15,15 +15,17 @@
       "type": "array",
       "description": "Which opportunities to include. 'posted' = open for applications now. 'forecasted' = announced but not yet open. 'closed' and 'archived' are historical and are useful for trend analysis.",
       "editor": "select",
-      "items": { "type": "string" },
       "default": ["posted", "forecasted"],
-      "enum": ["forecasted", "posted", "closed", "archived"],
-      "enumTitles": [
-        "Forecasted — announced, not yet open",
-        "Posted — open for applications",
-        "Closed — deadline passed",
-        "Archived — removed from active search"
-      ]
+      "items": {
+        "type": "string",
+        "enum": ["forecasted", "posted", "closed", "archived"],
+        "enumTitles": [
+          "Forecasted — announced, not yet open",
+          "Posted — open for applications",
+          "Closed — deadline passed",
+          "Archived — removed from active search"
+        ]
+      }
     },
     "includeDetails": {
       "title": "Include full opportunity details",
@@ -68,14 +70,16 @@
       "type": "array",
       "description": "Restrict by award mechanism.",
       "editor": "select",
-      "items": { "type": "string" },
-      "enum": ["G", "CA", "PC", "O"],
-      "enumTitles": [
-        "G — Grant",
-        "CA — Cooperative Agreement",
-        "PC — Procurement Contract",
-        "O — Other"
-      ],
+      "items": {
+        "type": "string",
+        "enum": ["G", "CA", "PC", "O"],
+        "enumTitles": [
+          "G — Grant",
+          "CA — Cooperative Agreement",
+          "PC — Procurement Contract",
+          "O — Other"
+        ]
+      },
       "sectionCaption": "Advanced filters"
     },
     "eligibilities": {

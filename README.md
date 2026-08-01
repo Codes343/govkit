@@ -11,7 +11,7 @@ in [BUSINESS_PLAN.md](BUSINESS_PLAN.md).
 
 | | |
 |---|---|
-| Actors built | 2 of 5 (Grants.gov, Federal Register) |
+| Actors built | 5 of 5 |
 | Code | Tested, linted, deploys itself |
 | Blocking on | Human setup — see [SETUP.md](SETUP.md), ~45 min, one time |
 
@@ -21,9 +21,9 @@ in [BUSINESS_PLAN.md](BUSINESS_PLAN.md).
 |---|---|---|
 | [`grants-gov-scraper`](actors/grants-gov-scraper) | `api.grants.gov` | none |
 | [`federal-register-scraper`](actors/federal-register-scraper) | `federalregister.gov/api/v1` | none |
-| *(planned)* `usaspending-scraper` | `api.usaspending.gov` | none |
-| *(planned)* `openfda-recalls-scraper` | `api.fda.gov` | none |
-| *(planned)* `clinicaltrials-scraper` | `clinicaltrials.gov/api/v2` | none |
+| [`usaspending-scraper`](actors/usaspending-scraper) | `api.usaspending.gov` | none |
+| [`openfda-recalls-scraper`](actors/openfda-recalls-scraper) | `api.fda.gov` | none |
+| [`clinicaltrials-scraper`](actors/clinicaltrials-scraper) | `clinicaltrials.gov/api/v2` | none |
 
 Every source is a keyless public API over plain HTTP — no browsers, no proxies.
 That is a deliberate architectural constraint, and it is what makes the pricing

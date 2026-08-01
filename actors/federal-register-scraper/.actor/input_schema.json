@@ -15,14 +15,16 @@
       "type": "array",
       "description": "Restrict to specific document types. Leave empty for all.",
       "editor": "select",
-      "items": { "type": "string" },
-      "enum": ["RULE", "PRORULE", "NOTICE", "PRESDOCU"],
-      "enumTitles": [
-        "Final Rule",
-        "Proposed Rule",
-        "Notice",
-        "Presidential Document"
-      ]
+      "items": {
+        "type": "string",
+        "enum": ["RULE", "PRORULE", "NOTICE", "PRESDOCU"],
+        "enumTitles": [
+          "Final Rule",
+          "Proposed Rule",
+          "Notice",
+          "Presidential Document"
+        ]
+      }
     },
     "publishedAfter": {
       "title": "Published on or after",

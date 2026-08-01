@@ -1,0 +1,83 @@
+{
+  "title": "ClinicalTrials.gov Studies Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "condition": {
+      "title": "Condition or disease",
+      "type": "string",
+      "description": "The condition being studied, e.g. \"diabetes\", \"non-small cell lung cancer\", \"Alzheimer\".",
+      "editor": "textfield",
+      "prefill": "diabetes"
+    },
+    "intervention": {
+      "title": "Intervention or treatment",
+      "type": "string",
+      "description": "Drug, device or procedure under study, e.g. \"semaglutide\", \"CAR-T\".",
+      "editor": "textfield"
+    },
+    "overallStatus": {
+      "title": "Study status",
+      "type": "array",
+      "description": "Recruitment status. Leave empty to include studies in every state.",
+      "editor": "select",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NOT_YET_RECRUITING",
+          "RECRUITING",
+          "ENROLLING_BY_INVITATION",
+          "ACTIVE_NOT_RECRUITING",
+          "SUSPENDED",
+          "TERMINATED",
+          "COMPLETED",
+          "WITHDRAWN",
+          "UNKNOWN"
+        ],
+        "enumTitles": [
+          "Not yet recruiting",
+          "Recruiting",
+          "Enrolling by invitation",
+          "Active, not recruiting",
+          "Suspended",
+          "Terminated",
+          "Completed",
+          "Withdrawn",
+          "Unknown status"
+        ]
+      }
+    },
+    "maxItems": {
+      "title": "Maximum results",
+      "type": "integer",
+      "description": "Stop after this many studies. Maximum 50000.",
+      "default": 1000,
+      "minimum": 1,
+      "maximum": 50000,
+      "unit": "studies"
+    },
+    "sponsor": {
+      "title": "Sponsor",
+      "type": "string",
+      "description": "Lead sponsor or collaborator, e.g. \"Pfizer\", \"National Cancer Institute\".",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters",
+      "sectionDescription": "All optional. Filters combine with AND."
+    },
+    "location": {
+      "title": "Location",
+      "type": "string",
+      "description": "Country, state or city where the study runs, e.g. \"Germany\", \"Boston\".",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters"
+    },
+    "term": {
+      "title": "Other search term",
+      "type": "string",
+      "description": "Free-text search across the whole study record, for anything the fields above don't cover.",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters"
+    }
+  },
+  "required": []
+}

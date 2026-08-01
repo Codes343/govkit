@@ -6,6 +6,7 @@ import logging
 
 from apify import Actor
 
+from govkit import inputs
 from govkit.billing import Billing
 from govkit.http import GovKitClient, UpstreamError
 from govkit.sources import federal_register as fr
@@ -16,48 +17,35 @@ DEFAULT_MAX_ITEMS = 1000
 HARD_MAX_ITEMS = 50_000
 
 
-def _as_list(value: object) -> list[str] | None:
-    if value is None:
-        return None
-    if isinstance(value, str):
-        parts = [p.strip() for p in value.split(",")]
-    elif isinstance(value, list):
-        parts = [str(p).strip() for p in value]
-    else:
-        return None
-    parts = [p for p in parts if p]
-    return parts or None
-
-
 async def main() -> None:
     async with Actor:
         raw = await Actor.get_input() or {}
 
-        doc_types = _as_list(raw.get("documentTypes"))
-        if doc_types:
-            invalid = [t for t in doc_types if t not in fr.DOCUMENT_TYPES]
-            if invalid:
-                await Actor.fail(
-                    status_message=(
-                        f"Unknown document type {invalid}. Valid values: "
-                        f"{', '.join(fr.DOCUMENT_TYPES)}."
-                    )
+        doc_types = inputs.as_list(raw.get("documentTypes"))
+        invalid = inputs.invalid_choices(doc_types, tuple(fr.DOCUMENT_TYPES))
+        if invalid:
+            await Actor.fail(
+                status_message=(
+                    f"Unknown document type {invalid}. Valid values: "
+                    f"{', '.join(fr.DOCUMENT_TYPES)}."
                 )
-                return
+            )
+            return
 
-        max_items = raw.get("maxItems") or DEFAULT_MAX_ITEMS
-        try:
-            max_items = max(1, min(int(max_items), HARD_MAX_ITEMS))
-        except (TypeError, ValueError):
-            max_items = DEFAULT_MAX_ITEMS
+        max_items = inputs.as_int(
+            raw.get("maxItems"),
+            default=DEFAULT_MAX_ITEMS,
+            minimum=1,
+            maximum=HARD_MAX_ITEMS,
+        )
 
         filters = {
-            "term": (raw.get("term") or "").strip() or None,
+            "term": inputs.as_text(raw.get("term")),
             "document_types": doc_types,
-            "agencies": _as_list(raw.get("agencies")),
-            "published_after": (raw.get("publishedAfter") or "").strip() or None,
-            "published_before": (raw.get("publishedBefore") or "").strip() or None,
-            "order": raw.get("order") or "newest",
+            "agencies": inputs.as_list(raw.get("agencies")),
+            "published_after": inputs.as_text(raw.get("publishedAfter")),
+            "published_before": inputs.as_text(raw.get("publishedBefore")),
+            "order": inputs.as_text(raw.get("order")) or "newest",
         }
 
         billing = Billing(Actor)
@@ -92,4 +80,6 @@ async def main() -> None:
                 "widen the publication date range."
             )
         else:
-            await Actor.set_status_message(f"Done — {total} Federal Register documents.")
+            await Actor.set_status_message(
+                f"Done — {total} Federal Register documents."
+            )

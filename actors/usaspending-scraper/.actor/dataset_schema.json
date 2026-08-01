@@ -1,0 +1,34 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Federal awards",
+      "transformation": {
+        "fields": [
+          "recipientName",
+          "awardAmount",
+          "awardingAgency",
+          "awardingSubAgency",
+          "startDate",
+          "endDate",
+          "awardId",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "recipientName": { "label": "Recipient" },
+          "awardAmount": { "label": "Amount (USD)" },
+          "awardingAgency": { "label": "Agency" },
+          "awardingSubAgency": { "label": "Sub-agency" },
+          "startDate": { "label": "Start" },
+          "endDate": { "label": "End" },
+          "awardId": { "label": "Award ID" },
+          "url": { "label": "Link", "format": "link" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "title": "USAspending Federal Awards Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "awardCategory": {
+      "title": "Award category",
+      "type": "string",
+      "description": "Which family of federal spending to pull. USAspending stores these as separate datasets — a single run returns one category, never a mix.",
+      "editor": "select",
+      "default": "contracts",
+      "enum": ["contracts", "grants", "direct_payments", "loans", "other", "idvs"],
+      "enumTitles": [
+        "Contracts — procurement awards",
+        "Grants — financial assistance",
+        "Direct payments — benefits and subsidies",
+        "Loans — loans and loan guarantees",
+        "Other financial assistance",
+        "IDVs — indefinite delivery vehicles"
+      ]
+    },
+    "startDate": {
+      "title": "Period start",
+      "type": "string",
+      "description": "Include awards active on or after this date. ISO format, e.g. \"2024-01-01\".",
+      "editor": "datepicker",
+      "prefill": "2024-01-01"
+    },
+    "endDate": {
+      "title": "Period end",
+      "type": "string",
+      "description": "Include awards active on or before this date. ISO format. Defaults to today.",
+      "editor": "datepicker"
+    },
+    "keywords": {
+      "title": "Keywords",
+      "type": "array",
+      "description": "Free-text search across award descriptions and recipients, e.g. [\"cybersecurity\", \"cloud migration\"].",
+      "editor": "stringList",
+      "items": { "type": "string" }
+    },
+    "maxItems": {
+      "title": "Maximum results",
+      "type": "integer",
+      "description": "Stop after this many awards. Maximum 50000.",
+      "default": 1000,
+      "minimum": 1,
+      "maximum": 50000,
+      "unit": "awards"
+    },
+    "agencies": {
+      "title": "Awarding agencies",
+      "type": "array",
+      "description": "Top-tier awarding agency names exactly as USAspending spells them, e.g. [\"Department of Defense\", \"Department of Energy\"].",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters",
+      "sectionDescription": "All optional. Filters combine with AND."
+    },
+    "recipients": {
+      "title": "Recipient name contains",
+      "type": "array",
+      "description": "Match recipients by name, e.g. [\"Lockheed\", \"Booz Allen\"].",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters"
+    },
+    "states": {
+      "title": "Place of performance states",
+      "type": "array",
+      "description": "Two-letter US state codes where the work is performed, e.g. [\"VA\", \"TX\"].",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters"
+    },
+    "awardAmountMin": {
+      "title": "Minimum award amount (USD)",
+      "type": "integer",
+      "description": "Only include awards worth at least this much.",
+      "minimum": 0,
+      "unit": "USD",
+      "sectionCaption": "Advanced filters"
+    },
+    "awardAmountMax": {
+      "title": "Maximum award amount (USD)",
+      "type": "integer",
+      "description": "Only include awards worth at most this much.",
+      "minimum": 0,
+      "unit": "USD",
+      "sectionCaption": "Advanced filters"
+    }
+  },
+  "required": []
+}

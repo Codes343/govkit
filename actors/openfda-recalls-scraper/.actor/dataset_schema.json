@@ -1,0 +1,34 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "FDA recalls",
+      "transformation": {
+        "fields": [
+          "recallingFirm",
+          "category",
+          "classification",
+          "status",
+          "reasonForRecall",
+          "productDescription",
+          "reportDate",
+          "recallNumber"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "recallingFirm": { "label": "Firm" },
+          "category": { "label": "Category" },
+          "classification": { "label": "Class" },
+          "status": { "label": "Status" },
+          "reasonForRecall": { "label": "Reason" },
+          "productDescription": { "label": "Product" },
+          "reportDate": { "label": "Reported" },
+          "recallNumber": { "label": "Recall #" }
+        }
+      }
+    }
+  }
+}

@@ -18,8 +18,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from govkit.http import GovKitClient
+from govkit.sources import clinicaltrials, grants_gov, openfda, usaspending
 from govkit.sources import federal_register as fr
-from govkit.sources import grants_gov
 
 
 @dataclass
@@ -88,7 +88,48 @@ async def check_federal_register() -> Check:
     )
 
 
-CHECKS: list[Callable] = [check_grants_gov, check_federal_register]
+async def check_usaspending() -> Check:
+    records = await _collect(
+        usaspending,
+        max_items=5,
+        award_types=usaspending.AWARD_TYPE_GROUPS["contracts"],
+        start_date="2025-01-01",
+        end_date="2026-12-31",
+    )
+    return _verify(
+        "usaspending.gov/spending_by_award",
+        records,
+        {"awardId", "recipientName", "awardAmount", "awardingAgency", "url"},
+    )
+
+
+async def check_openfda() -> Check:
+    records = await _collect(openfda, max_items=5, categories=["food"])
+    return _verify(
+        "api.fda.gov/food/enforcement",
+        records,
+        {"recallNumber", "category", "status", "classification", "recallingFirm"},
+    )
+
+
+async def check_clinicaltrials() -> Check:
+    # Also guards the User-Agent: this endpoint returns 403 to a UA without a
+    # recognised HTTP-client token, which is easy to "clean up" and break.
+    records = await _collect(clinicaltrials, max_items=5, condition="diabetes")
+    return _verify(
+        "clinicaltrials.gov/api/v2/studies",
+        records,
+        {"nctId", "briefTitle", "overallStatus", "url"},
+    )
+
+
+CHECKS: list[Callable] = [
+    check_grants_gov,
+    check_federal_register,
+    check_usaspending,
+    check_openfda,
+    check_clinicaltrials,
+]
 
 
 async def main() -> int:

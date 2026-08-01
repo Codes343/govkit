@@ -100,6 +100,39 @@ def check_actor(actor: Path) -> list[str]:
             if prop.get("type") == "array" and "items" not in prop:
                 errors.append(f"{actor.name}: array input {name!r} has no items schema")
 
+            # Apify puts enum/enumTitles at the property level for a string
+            # field, but inside `items` for an array. Getting it backwards is
+            # accepted by `apify push` and then fails the remote Docker build
+            # with "Input schema validation failed to find enum property
+            # definition" - a slow, opaque way to learn about a typo.
+            items = prop.get("items") or {}
+            if prop.get("type") == "array":
+                if "enum" in prop:
+                    errors.append(
+                        f"{actor.name}: array input {name!r} declares 'enum' at the "
+                        "property level; it must be inside 'items'"
+                    )
+                if "enumTitles" in prop:
+                    errors.append(
+                        f"{actor.name}: array input {name!r} declares 'enumTitles' at "
+                        "the property level; it must be inside 'items'"
+                    )
+            elif "enum" in items or "enumTitles" in items:
+                errors.append(
+                    f"{actor.name}: non-array input {name!r} puts enum inside "
+                    "'items'; it belongs at the property level"
+                )
+
+            for holder, label in ((prop, name), (items, f"{name}.items")):
+                enum, titles = holder.get("enum"), holder.get("enumTitles")
+                if titles and not enum:
+                    errors.append(f"{actor.name}: {label} has enumTitles but no enum")
+                if enum and titles and len(enum) != len(titles):
+                    errors.append(
+                        f"{actor.name}: {label} has {len(enum)} enum values but "
+                        f"{len(titles)} enumTitles"
+                    )
+
     # Parse rather than import: the actor entrypoint imports `apify`, which we
     # do not want as a CI dependency just to check the file is well-formed.
     main_py = actor / "src" / "main.py"
