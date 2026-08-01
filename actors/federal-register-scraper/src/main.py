@@ -6,9 +6,9 @@ import logging
 
 from apify import Actor
 
-from fedstack.billing import Billing
-from fedstack.http import FedstackClient, UpstreamError
-from fedstack.sources import federal_register as fr
+from govkit.billing import Billing
+from govkit.http import GovKitClient, UpstreamError
+from govkit.sources import federal_register as fr
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,7 @@ async def main() -> None:
 
         total = 0
         try:
-            async with FedstackClient(fr.SOURCE) as client:
+            async with GovKitClient(fr.SOURCE) as client:
                 async for page in fr.search(client, max_items=max_items, **filters):
                     accepted = await billing.push_many(page)
                     total += accepted

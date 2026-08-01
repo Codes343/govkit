@@ -1,7 +1,7 @@
 [project]
-name = "fedstack"
+name = "govkit"
 version = "0.1.0"
-description = "Shared core for Fedstack US federal open-data Apify Actors"
+description = "Shared core for GovKit US federal open-data Apify Actors"
 requires-python = ">=3.12"
 dependencies = ["httpx>=0.27,<0.29"]
 

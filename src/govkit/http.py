@@ -1,4 +1,4 @@
-"""Async HTTP client shared by every Fedstack actor.
+"""Async HTTP client shared by every GovKit actor.
 
 Responsibilities:
   * polite, bounded concurrency against .gov endpoints
@@ -42,7 +42,7 @@ class UpstreamError(RuntimeError):
         super().__init__(f"[{source}] {message}")
 
 
-class FedstackClient:
+class GovKitClient:
     """A rate-limited, retrying JSON client scoped to one upstream source."""
 
     def __init__(
@@ -55,7 +55,7 @@ class FedstackClient:
         max_retries: int = DEFAULT_MAX_RETRIES,
         client: httpx.AsyncClient | None = None,
     ) -> None:
-        from fedstack import USER_AGENT
+        from govkit import USER_AGENT
 
         self.source = source
         self.max_retries = max_retries
@@ -70,7 +70,7 @@ class FedstackClient:
             headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
         )
 
-    async def __aenter__(self) -> FedstackClient:
+    async def __aenter__(self) -> GovKitClient:
         return self
 
     async def __aexit__(self, *_exc: object) -> None:

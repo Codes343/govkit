@@ -12,8 +12,8 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 from typing import Any
 
-from fedstack.http import FedstackClient
-from fedstack.normalize import clean_date, clean_int, clean_str, clean_text, compact
+from govkit.http import GovKitClient
+from govkit.normalize import clean_date, clean_int, clean_str, clean_text, compact
 
 SOURCE = "federalregister.gov"
 BASE_URL = "https://www.federalregister.gov/api/v1/documents.json"
@@ -130,7 +130,7 @@ def build_params(
 
 
 async def search(
-    client: FedstackClient, *, max_items: int, **filters: Any
+    client: GovKitClient, *, max_items: int, **filters: Any
 ) -> AsyncIterator[list[dict[str, Any]]]:
     """Yield pages of normalized documents, following the API's cursor."""
     per_page = min(PAGE_SIZE, max_items)

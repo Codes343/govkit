@@ -20,8 +20,8 @@ Go to <https://console.apify.com/sign-up>.
   credit and that is all this business consumes.
 - When asked for a username, this becomes your Store profile URL
   (`apify.com/<username>`), so pick one of these in order of preference:
-  1. `fedstack`
-  2. `fedstack-data`
+  1. `govkit`
+  2. `govkit-data`
   3. `civicfeed`
   4. `opengrid-data`
 
@@ -32,10 +32,10 @@ cross-links between actors.
 
 ## 2. Push this repo to GitHub — 5 min
 
-From `fedstack/`:
+From `govkit/`:
 
 ```bash
-git init && git add -A && git commit -m "Fedstack: federal open-data actors"
+git init && git add -A && git commit -m "GovKit: federal open-data actors"
 ```
 
 Then create an empty repo on GitHub and push to it. A **public** repo is
@@ -47,7 +47,7 @@ transparency is a mild trust signal for buyers of a data product.
 ## 3. Create an Apify API token and give it to CI — 5 min
 
 In Apify Console: **Settings → API & Integrations → Personal API tokens →
-Create new token**. Name it `fedstack-ci`. Copy it.
+Create new token**. Name it `govkit-ci`. Copy it.
 
 Then in your GitHub repo: **Settings → Secrets and variables → Actions → New
 repository secret**.
@@ -82,7 +82,7 @@ Monetization**:
 
 1. Choose **Pay per event**.
 2. Add these two events exactly (names must match the code in
-   `src/fedstack/billing.py`):
+   `src/govkit/billing.py`):
 
    | Event name | Title | Price (USD) |
    |---|---|---|

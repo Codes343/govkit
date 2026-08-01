@@ -7,7 +7,7 @@
 | Actor start | `actor-start` | $0.005 | Once, at the start of every run |
 | Result delivered | `dataset-item` | $0.003 | Per record actually written to the dataset |
 
-These names must match `src/fedstack/billing.py` exactly, and are configured in
+These names must match `src/govkit/billing.py` exactly, and are configured in
 Apify Console per actor (SETUP.md step 5). If you change one, change both.
 
 ## Why these numbers
@@ -50,7 +50,7 @@ move together.
 
 **Break-even for the $20/month goal: ~8,400 records/month delivered.**
 
-The margin holds because every Fedstack actor is plain HTTP against a keyless
+The margin holds because every GovKit actor is plain HTTP against a keyless
 JSON API. There is no headless browser, no residential proxy ($8/GB), and no
 paid upstream. That single architectural choice is what makes a $3 price point
 profitable — and it is also why we will not add a source that needs a browser

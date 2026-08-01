@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Vendor the shared `fedstack` core into each actor, then optionally deploy.
+"""Vendor the shared `govkit` core into each actor, then optionally deploy.
 
 Apify pushes a single directory, and there is no private package registry in a
 $0 budget. So the shared core lives in one place in git and is copied into each
-actor immediately before build. The copies are gitignored — `src/fedstack` is
+actor immediately before build. The copies are gitignored — `src/govkit` is
 always the single source of truth.
 
 Usage:
@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CORE = ROOT / "src" / "fedstack"
+CORE = ROOT / "src" / "govkit"
 ACTORS_DIR = ROOT / "actors"
 
 
@@ -37,7 +37,7 @@ def discover_actors(only: str | None) -> list[Path]:
 
 
 def vendor(actor: Path) -> None:
-    target = actor / "src" / "fedstack"
+    target = actor / "src" / "govkit"
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(CORE, target, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))

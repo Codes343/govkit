@@ -33,7 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TITLE="Fedstack revenue tracker"
+          TITLE="GovKit revenue tracker"
           EXISTING=$(gh issue list --state open --search "$TITLE in:title" \
             --json number --jq '.[0].number')
 

@@ -1,4 +1,4 @@
-from fedstack.normalize import (
+from govkit.normalize import (
     clean_bool,
     clean_date,
     clean_money,

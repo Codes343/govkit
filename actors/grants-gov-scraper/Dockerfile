@@ -8,7 +8,7 @@ RUN echo "Python version:" \
  && echo "All installed Python packages:" \
  && pip freeze
 
-# `src/fedstack` is vendored in by scripts/build_actor.py at deploy time so that
+# `src/govkit` is vendored in by scripts/build_actor.py at deploy time so that
 # every actor ships the same audited core without a private package registry.
 COPY . ./
 

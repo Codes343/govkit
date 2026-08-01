@@ -110,7 +110,7 @@ def main() -> int:
     projected_monthly = totals["net"] * (30 / WINDOW_DAYS)
     pct = (projected_monthly / GOAL_MONTHLY_NET * 100) if GOAL_MONTHLY_NET else 0
 
-    print(f"## Fedstack weekly report - last {WINDOW_DAYS} days\n")
+    print(f"## GovKit weekly report - last {WINDOW_DAYS} days\n")
     if not rows:
         print("No actors found on this account yet. See SETUP.md.")
         return 0

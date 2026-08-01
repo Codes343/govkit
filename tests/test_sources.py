@@ -2,9 +2,9 @@ import httpx
 import pytest
 import respx
 
-from fedstack.http import FedstackClient, UpstreamError
-from fedstack.sources import federal_register as fr
-from fedstack.sources import grants_gov
+from govkit.http import GovKitClient, UpstreamError
+from govkit.sources import federal_register as fr
+from govkit.sources import grants_gov
 
 
 def _envelope(hits, hit_count=None):
@@ -85,7 +85,7 @@ async def test_search_raises_on_logical_error_hidden_behind_http_200():
     respx.post(grants_gov.SEARCH_URL).mock(
         return_value=httpx.Response(200, json={"errorcode": 1, "msg": "Bad request"})
     )
-    async with FedstackClient("grants.gov", min_interval=0) as client:
+    async with GovKitClient("grants.gov", min_interval=0) as client:
         with pytest.raises(UpstreamError, match="Bad request"):
             async for _ in grants_gov.search(client, max_items=10):
                 pass
@@ -99,7 +99,7 @@ async def test_search_paginates_and_respects_max_items():
             httpx.Response(200, json=_envelope([_hit(n) for n in range(100, 150)], 250)),
         ]
     )
-    async with FedstackClient("grants.gov", min_interval=0) as client:
+    async with GovKitClient("grants.gov", min_interval=0) as client:
         total = 0
         async for page in grants_gov.search(client, max_items=150):
             total += len(page)
@@ -111,7 +111,7 @@ async def test_search_stops_when_a_page_comes_back_empty():
     respx.post(grants_gov.SEARCH_URL).mock(
         return_value=httpx.Response(200, json=_envelope([], 0))
     )
-    async with FedstackClient("grants.gov", min_interval=0) as client:
+    async with GovKitClient("grants.gov", min_interval=0) as client:
         pages = [p async for p in grants_gov.search(client, max_items=1000)]
     assert pages == []
 
@@ -128,7 +128,7 @@ async def test_enrich_survives_a_single_bad_detail_lookup():
         ]
     )
     records = [grants_gov.normalize_hit(_hit(1))]
-    async with FedstackClient("grants.gov", max_retries=4, min_interval=0) as client:
+    async with GovKitClient("grants.gov", max_retries=4, min_interval=0) as client:
         out = await grants_gov.enrich(client, records)
 
     # The base record still ships; the failure is reported, not swallowed.
@@ -188,7 +188,7 @@ async def test_fr_search_follows_the_cursor_then_stops():
             200, json={"results": [{"document_number": "b"}], "next_page_url": None}
         )
     )
-    async with FedstackClient("fr", min_interval=0) as client:
+    async with GovKitClient("fr", min_interval=0) as client:
         docs = [d async for page in fr.search(client, max_items=100) for d in page]
 
     assert [d["documentNumber"] for d in docs] == ["a", "b"]

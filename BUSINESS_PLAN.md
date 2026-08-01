@@ -1,4 +1,4 @@
-# Fedstack — Autonomous Business Plan
+# GovKit — Autonomous Business Plan
 
 **Target:** ≥ $20 USD/month profit. **Budget:** $0. **Owner workload:** ~45 min one-time, ~0/month after.
 
@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-**Fedstack** is a portfolio of paid data-extraction tools ("Actors") published on **Apify Store**, serving structured US federal open-government data — grant opportunities, contract awards, regulatory filings, product recalls, and clinical trials — to GovCon firms, grant writers, researchers, journalists, and AI agents.
+**GovKit** is a portfolio of paid data-extraction tools ("Actors") published on **Apify Store**, serving structured US federal open-government data — grant opportunities, contract awards, regulatory filings, product recalls, and clinical trials — to GovCon firms, grant writers, researchers, journalists, and AI agents.
 
 The core insight from research: **for a $0-budget digital business, the binding constraint is distribution, not product.** Gumroad "brings you almost no buyers"; itch.io asset packs earn $20–30/mo but demand 30+ hrs/month of human work. Both fail Rule 1 or Rule 4.
 
@@ -19,7 +19,7 @@ Apify Store is the rare channel that supplies **all four** things a zero-budget 
 | Payment + billing infra | Stripe, invoicing, plan management, monthly payout on the 11th |
 | Zero support burden | Self-serve; docs + input schema answer questions |
 
-Developers keep **80%** of revenue minus platform compute. Because every Fedstack actor calls a **keyless, free, government JSON API over plain HTTP** — no browser, no proxies — compute cost is near zero and gross margin approaches the full 80%.
+Developers keep **80%** of revenue minus platform compute. Because every GovKit actor calls a **keyless, free, government JSON API over plain HTTP** — no browser, no proxies — compute cost is near zero and gross margin approaches the full 80%.
 
 **Why this niche:** a competition sweep found 9+ actors for ATS job scraping and 6+ for SEC EDGAR, but **zero** for Grants.gov, USAspending, or FDA recalls. Meanwhile the commercial value of this data is proven — GovWin IQ and Bloomberg Government sell it at $10k+/yr.
 
@@ -92,7 +92,7 @@ Legend — Cost: 5 = truly $0. Auto: 5 = zero human work. Comp: 5 = uncontested.
 - **vs #3 (paid MCP server):** MCP monetization is real but the marketplaces are young and billing is fragmented across Stripe MPP / x402 / per-hub schemes. Apify's billing is mature and already pays out. *(Note: Apify actors are auto-exposed over MCP anyway — so #1 captures most of #3's upside for free.)*
 - **vs #4/#7 (OSS + sponsors):** donations are unreliable; conversion from free users to sponsors is <0.1% and requires an audience I don't have.
 - **vs #5 (programmatic SEO):** excellent long-run EV and near-zero cost, but time-to-first-revenue is 4–9 months and it needs an affiliate program approval. Kept as the **Phase 3 growth channel**, not the primary bet.
-- **vs #9/#11/#18/#20/#24 (marketplace creative goods):** all fail Rule 4 — evidenced by the itch.io creator earning $20–30/mo for **30+ hrs/month**. Fedstack's marginal hour cost after launch is zero.
+- **vs #9/#11/#18/#20/#24 (marketplace creative goods):** all fail Rule 4 — evidenced by the itch.io creator earning $20–30/mo for **30+ hrs/month**. GovKit's marginal hour cost after launch is zero.
 - **vs #22/#24/#27/#28/#30:** all require upfront spend ($5 Chrome dev fee, $0.20/Etsy listing, capital, inventory, $99 Apple fee). Violate Rule 2.
 
 ---
@@ -119,7 +119,7 @@ Legend — Cost: 5 = truly $0. Auto: 5 = zero human work. Comp: 5 = uncontested.
 
 ```
                    ┌──────────────────────────────────────────┐
-                   │  GitHub  (fedstack repo, free)           │
+                   │  GitHub  (govkit repo, free)           │
                    │  • one shared Python package             │
                    │  • 5 actor manifests                     │
                    └───────────────┬──────────────────────────┘
@@ -162,7 +162,7 @@ Legend — Cost: 5 = truly $0. Auto: 5 = zero human work. Comp: 5 = uncontested.
 | Payouts | Apify, monthly on the 11th | Invoicing |
 | Discovery/marketing | SEO fields + Store cross-discovery | Advertising |
 | Agent distribution | Apify auto-exposes actors over MCP | BD/integrations |
-| Pagination, retry, dedupe, rate limiting | Shared `fedstack/core.py` | — |
+| Pagination, retry, dedupe, rate limiting | Shared `govkit/core.py` | — |
 
 **What cannot be automated, and why:** account creation, identity/tax/payout details, and clicking "Publish" — Apify and financial regulation require a legally responsible human. Total: one ~45-minute session.
 
@@ -234,7 +234,7 @@ Deliberately conservative — assumes no viral event and no paid promotion.
 One session, ~45 minutes, one time:
 
 1. **Create a free Apify account** — apify.com/sign-up. No credit card required.
-2. **Choose the profile username** — `fedstack` (fallbacks: `fedstack-data`, `civicfeed`, `opengrid-data`).
+2. **Choose the profile username** — `govkit` (fallbacks: `govkit-data`, `civicfeed`, `opengrid-data`).
 3. **Create an API token** — Console → Settings → Integrations → API tokens. Paste into `.env` locally and into GitHub repo secret `APIFY_TOKEN`.
 4. **Complete billing/payout details** — Console → Settings → Billing. Required to receive money; involves identity and bank/PayPal details. *Human-only by law.* **While there, note the minimum payout threshold** (feeds risk R4).
 5. **Click "Publish to Store"** on each actor and accept the Apify Store publishing terms.
@@ -247,7 +247,7 @@ One session, ~45 minutes, one time:
 ## 10. Build Roadmap
 
 **Phase 0 — Foundation** *(automated, in progress)*
-Repo scaffold; shared `fedstack` core (async HTTP client, retry/backoff, pagination, rate limiting, PPE charging helper); pytest suite; ruff config.
+Repo scaffold; shared `govkit` core (async HTTP client, retry/backoff, pagination, rate limiting, PPE charging helper); pytest suite; ruff config.
 
 **Phase 1 — First two actors** *(automated)*
 Grants.gov and Federal Register: `main.py`, `.actor/actor.json`, `input_schema.json`, SEO-optimized `README.md`, `Dockerfile`, PPE pricing manifest. Tests green locally.

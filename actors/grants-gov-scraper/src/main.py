@@ -6,9 +6,9 @@ import logging
 
 from apify import Actor
 
-from fedstack.billing import Billing
-from fedstack.http import FedstackClient, UpstreamError
-from fedstack.sources import grants_gov
+from govkit.billing import Billing
+from govkit.http import GovKitClient, UpstreamError
+from govkit.sources import grants_gov
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ async def main() -> None:
 
         total = 0
         try:
-            async with FedstackClient(grants_gov.SOURCE) as client:
+            async with GovKitClient(grants_gov.SOURCE) as client:
                 async for page in grants_gov.search(
                     client, max_items=max_items, **filters
                 ):

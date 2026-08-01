@@ -1,7 +1,7 @@
 # The shared core is vendored into each actor at build time by
-# scripts/build_actor.py. src/fedstack is the single source of truth; the copies
+# scripts/build_actor.py. src/govkit is the single source of truth; the copies
 # must never be committed or they will drift.
-actors/*/src/fedstack/
+actors/*/src/govkit/
 
 .venv/
 

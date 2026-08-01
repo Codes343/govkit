@@ -1,4 +1,4 @@
-# Fedstack
+# GovKit
 
 Paid data-extraction Actors on [Apify Store](https://apify.com/store) that turn
 US federal open-government APIs into clean, structured, exportable datasets.
@@ -32,7 +32,7 @@ in [PRICING.md](PRICING.md) profitable.
 ## Layout
 
 ```
-src/fedstack/          Shared core — the single source of truth
+src/govkit/          Shared core — the single source of truth
   http.py              Rate-limited, retrying JSON client
   billing.py           Pay-per-event charging + spend-ceiling enforcement
   normalize.py         Date/money/HTML cleaning
@@ -45,7 +45,7 @@ scripts/               Build, validate, smoke-test, report
 tests/                 Unit tests (mocked HTTP)
 ```
 
-`src/fedstack` is copied into each actor at build time by
+`src/govkit` is copied into each actor at build time by
 `scripts/build_actor.py`, because Apify deploys a single directory and there is
 no private package registry on a $0 budget. Those copies are gitignored.
 

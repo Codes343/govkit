@@ -17,9 +17,9 @@ import traceback
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from fedstack.http import FedstackClient
-from fedstack.sources import federal_register as fr
-from fedstack.sources import grants_gov
+from govkit.http import GovKitClient
+from govkit.sources import federal_register as fr
+from govkit.sources import grants_gov
 
 
 @dataclass
@@ -32,7 +32,7 @@ class Check:
 
 
 async def _collect(source_module, *, max_items: int, **filters) -> list[dict]:
-    async with FedstackClient(source_module.SOURCE, min_interval=0.05) as client:
+    async with GovKitClient(source_module.SOURCE, min_interval=0.05) as client:
         out: list[dict] = []
         async for page in source_module.search(client, max_items=max_items, **filters):
             out.extend(page)
@@ -67,7 +67,7 @@ async def check_grants_gov() -> Check:
         return check
 
     # The detail endpoint is a separate contract and fails separately.
-    async with FedstackClient(grants_gov.SOURCE) as client:
+    async with GovKitClient(grants_gov.SOURCE) as client:
         enriched = await grants_gov.enrich(client, records[:2])
     if any("detailError" in r for r in enriched):
         errors = [r["detailError"] for r in enriched if "detailError" in r]
@@ -101,7 +101,7 @@ async def main() -> int:
                 Check(check.__name__, False, traceback.format_exc(limit=3).strip())
             )
 
-    print("## Fedstack upstream smoke test\n")
+    print("## GovKit upstream smoke test\n")
     for result in results:
         icon = "PASS" if result.ok else "FAIL"
         # ASCII only: this output is read from Windows consoles and CI logs alike.

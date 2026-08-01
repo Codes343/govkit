@@ -13,8 +13,8 @@ import asyncio
 from collections.abc import AsyncIterator
 from typing import Any
 
-from fedstack.http import FedstackClient, UpstreamError
-from fedstack.normalize import (
+from govkit.http import GovKitClient, UpstreamError
+from govkit.normalize import (
     clean_bool,
     clean_date,
     clean_int,
@@ -101,13 +101,13 @@ def normalize_detail(data: dict[str, Any]) -> dict[str, Any]:
     )
 
 
-async def _fetch_detail(client: FedstackClient, opp_id: str) -> dict[str, Any]:
+async def _fetch_detail(client: GovKitClient, opp_id: str) -> dict[str, Any]:
     payload = await client.post_json(FETCH_URL, {"opportunityId": opp_id})
     return normalize_detail(_check_envelope(payload))
 
 
 async def enrich(
-    client: FedstackClient, records: list[dict[str, Any]], *, concurrency: int = 5
+    client: GovKitClient, records: list[dict[str, Any]], *, concurrency: int = 5
 ) -> list[dict[str, Any]]:
     """Attach full synopsis detail to a page of records.
 
@@ -165,7 +165,7 @@ def build_search_body(
 
 
 async def search(
-    client: FedstackClient,
+    client: GovKitClient,
     *,
     max_items: int,
     **filters: Any,

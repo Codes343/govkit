@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from fedstack.billing import EVENT_ACTOR_START, EVENT_DATASET_ITEM, Billing
+from govkit.billing import EVENT_ACTOR_START, EVENT_DATASET_ITEM, Billing
 
 
 class ChargeResult:
