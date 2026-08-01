@@ -1,0 +1,34 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Federal Register documents",
+      "transformation": {
+        "fields": [
+          "title",
+          "documentType",
+          "agencies",
+          "publicationDate",
+          "commentsCloseDate",
+          "effectiveDate",
+          "documentNumber",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "title": { "label": "Title" },
+          "documentType": { "label": "Type" },
+          "agencies": { "label": "Agencies" },
+          "publicationDate": { "label": "Published" },
+          "commentsCloseDate": { "label": "Comments close" },
+          "effectiveDate": { "label": "Effective" },
+          "documentNumber": { "label": "Doc #" },
+          "url": { "label": "Link", "format": "link" }
+        }
+      }
+    }
+  }
+}

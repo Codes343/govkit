@@ -1,0 +1,34 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Funding opportunities",
+      "transformation": {
+        "fields": [
+          "title",
+          "agencyName",
+          "status",
+          "closeDate",
+          "awardCeiling",
+          "expectedNumberOfAwards",
+          "opportunityNumber",
+          "url"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "title": { "label": "Title" },
+          "agencyName": { "label": "Agency" },
+          "status": { "label": "Status" },
+          "closeDate": { "label": "Deadline" },
+          "awardCeiling": { "label": "Award ceiling" },
+          "expectedNumberOfAwards": { "label": "# Awards" },
+          "opportunityNumber": { "label": "Opportunity #" },
+          "url": { "label": "Link", "format": "link" }
+        }
+      }
+    }
+  }
+}

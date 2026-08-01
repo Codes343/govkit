@@ -1,0 +1,33 @@
+[project]
+name = "fedstack"
+version = "0.1.0"
+description = "Shared core for Fedstack US federal open-data Apify Actors"
+requires-python = ">=3.12"
+dependencies = ["httpx>=0.27,<0.29"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "respx>=0.21", "ruff>=0.6"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = ["live: hits real upstream government APIs (network required)"]
+
+[tool.ruff]
+line-length = 90
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF", "BLE"]
+
+[tool.ruff.lint.per-file-ignores]
+# Test doubles stand in for third-party objects; matching their loose signatures
+# is the point.
+"tests/*" = ["ANN"]

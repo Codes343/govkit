@@ -1,0 +1,62 @@
+name: Deploy actors
+
+# Push to master -> every actor is rebuilt and redeployed to Apify. There is no
+# manual deploy step, because there is no human to perform one.
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "src/**"
+      - "actors/**"
+      - "scripts/build_actor.py"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+    inputs:
+      actor:
+        description: "Deploy only this actor (blank = all)"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Without the token there is nothing to deploy to; skip rather than fail red
+    # for anyone who forks the repo.
+    if: github.repository_owner != ''
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Validate actors
+        run: python scripts/check_actors.py
+
+      - name: Unit tests
+        run: pytest -q
+
+      - name: Guard against deploying without credentials
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          if [ -z "$APIFY_TOKEN" ]; then
+            echo "::error::APIFY_TOKEN secret is not set. See SETUP.md step 3."
+            exit 1
+          fi
+
+      - name: Vendor core and push to Apify
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: |
+          if [ -n "${{ inputs.actor }}" ]; then
+            python scripts/build_actor.py --actor "${{ inputs.actor }}" --push
+          else
+            python scripts/build_actor.py --push
+          fi

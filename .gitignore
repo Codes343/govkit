@@ -1,0 +1,30 @@
+# The shared core is vendored into each actor at build time by
+# scripts/build_actor.py. src/fedstack is the single source of truth; the copies
+# must never be committed or they will drift.
+actors/*/src/fedstack/
+
+.venv/
+
+# Apify CLI local state
+actors/*/storage/
+actors/*/.venv/
+apify_storage/
+storage/
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+.env
+.env.*
+!.env.example
+
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,68 @@
+{
+  "title": "Federal Register Rules & Notices Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "term": {
+      "title": "Search term",
+      "type": "string",
+      "description": "Full-text search across Federal Register documents, e.g. \"artificial intelligence\", \"PFAS\", \"tariff\". Leave empty to return everything matching your other filters.",
+      "editor": "textfield",
+      "prefill": "artificial intelligence"
+    },
+    "documentTypes": {
+      "title": "Document type",
+      "type": "array",
+      "description": "Restrict to specific document types. Leave empty for all.",
+      "editor": "select",
+      "items": { "type": "string" },
+      "enum": ["RULE", "PRORULE", "NOTICE", "PRESDOCU"],
+      "enumTitles": [
+        "Final Rule",
+        "Proposed Rule",
+        "Notice",
+        "Presidential Document"
+      ]
+    },
+    "publishedAfter": {
+      "title": "Published on or after",
+      "type": "string",
+      "description": "ISO date, e.g. \"2026-01-01\". Combine with the field below for a range.",
+      "editor": "datepicker"
+    },
+    "publishedBefore": {
+      "title": "Published on or before",
+      "type": "string",
+      "description": "ISO date, e.g. \"2026-12-31\".",
+      "editor": "datepicker"
+    },
+    "maxItems": {
+      "title": "Maximum results",
+      "type": "integer",
+      "description": "Stop after this many documents. Maximum 50000.",
+      "default": 1000,
+      "minimum": 1,
+      "maximum": 50000,
+      "unit": "documents"
+    },
+    "agencies": {
+      "title": "Agency slugs",
+      "type": "array",
+      "description": "Restrict to agencies by Federal Register slug, e.g. \"environmental-protection-agency\", \"food-and-drug-administration\", \"securities-and-exchange-commission\".",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters"
+    },
+    "order": {
+      "title": "Sort order",
+      "type": "string",
+      "description": "How to order results.",
+      "editor": "select",
+      "default": "newest",
+      "enum": ["newest", "oldest", "relevance"],
+      "enumTitles": ["Newest first", "Oldest first", "Most relevant"],
+      "sectionCaption": "Advanced filters"
+    }
+  },
+  "required": []
+}

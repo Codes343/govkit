@@ -1,0 +1,99 @@
+{
+  "title": "Grants.gov Funding Opportunities Scraper",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "keyword": {
+      "title": "Keyword",
+      "type": "string",
+      "description": "Full-text search across opportunity titles and descriptions, e.g. \"artificial intelligence\", \"rural broadband\", \"workforce development\". Leave empty to return every opportunity matching your other filters.",
+      "editor": "textfield",
+      "prefill": "artificial intelligence"
+    },
+    "oppStatuses": {
+      "title": "Opportunity status",
+      "type": "array",
+      "description": "Which opportunities to include. 'posted' = open for applications now. 'forecasted' = announced but not yet open. 'closed' and 'archived' are historical and are useful for trend analysis.",
+      "editor": "select",
+      "items": { "type": "string" },
+      "default": ["posted", "forecasted"],
+      "enum": ["forecasted", "posted", "closed", "archived"],
+      "enumTitles": [
+        "Forecasted — announced, not yet open",
+        "Posted — open for applications",
+        "Closed — deadline passed",
+        "Archived — removed from active search"
+      ]
+    },
+    "includeDetails": {
+      "title": "Include full opportunity details",
+      "type": "boolean",
+      "description": "Fetch the complete synopsis for every result: award ceiling and floor, total program funding, expected number of awards, eligible applicant types, cost-sharing requirement, agency contact email, and the full plain-text description. Turn this OFF for a faster, cheaper list of titles and deadlines only.",
+      "default": true
+    },
+    "maxItems": {
+      "title": "Maximum results",
+      "type": "integer",
+      "description": "Stop after this many opportunities. Use a small number while you tune your filters, then raise it. Maximum 50000.",
+      "default": 1000,
+      "minimum": 1,
+      "maximum": 50000,
+      "unit": "opportunities"
+    },
+    "agencies": {
+      "title": "Agency codes",
+      "type": "array",
+      "description": "Restrict to specific agencies by their Grants.gov code, e.g. \"NSF\", \"HHS-NIH11\", \"USDA-NIFA\", \"DOE-GFO\". Leave empty for all agencies.",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters",
+      "sectionDescription": "All of these are optional. Filters combine with AND."
+    },
+    "aln": {
+      "title": "Assistance Listing Number (ALN / CFDA)",
+      "type": "string",
+      "description": "Filter by a single Assistance Listing Number, e.g. \"47.075\". Formerly known as the CFDA number.",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters"
+    },
+    "opportunityNumber": {
+      "title": "Opportunity number",
+      "type": "string",
+      "description": "Look up one specific opportunity by its number, e.g. \"PD-19-127Y\".",
+      "editor": "textfield",
+      "sectionCaption": "Advanced filters"
+    },
+    "fundingInstruments": {
+      "title": "Funding instrument",
+      "type": "array",
+      "description": "Restrict by award mechanism.",
+      "editor": "select",
+      "items": { "type": "string" },
+      "enum": ["G", "CA", "PC", "O"],
+      "enumTitles": [
+        "G — Grant",
+        "CA — Cooperative Agreement",
+        "PC — Procurement Contract",
+        "O — Other"
+      ],
+      "sectionCaption": "Advanced filters"
+    },
+    "eligibilities": {
+      "title": "Eligible applicant codes",
+      "type": "array",
+      "description": "Grants.gov eligibility codes. Common ones: 06 = public/state higher education, 12 = small businesses, 20 = private institutions of higher education, 21 = nonprofits without 501(c)(3), 25 = others, 99 = unrestricted.",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters"
+    },
+    "fundingCategories": {
+      "title": "Funding category codes",
+      "type": "array",
+      "description": "Grants.gov category codes. Common ones: ST = science & technology, HL = health, ED = education, EN = energy, ENV = environment, AG = agriculture, BC = business & commerce.",
+      "editor": "stringList",
+      "items": { "type": "string" },
+      "sectionCaption": "Advanced filters"
+    }
+  },
+  "required": []
+}

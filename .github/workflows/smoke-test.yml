@@ -1,0 +1,73 @@
+name: Upstream smoke test
+
+# The business has no staff. This workflow is the entire monitoring department:
+# if a government API changes shape or goes down, it files the ticket itself.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Run smoke test
+        id: smoke
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python scripts/smoke_test.py 2>&1 | tee smoke.md
+
+      - name: Open or update an issue when a source breaks
+        if: steps.smoke.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Upstream smoke test failing"
+          BODY="$(cat smoke.md)
+
+          ---
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          A source in this report is returning no records or has changed its
+          schema. Paying customers see failed runs until it is fixed."
+
+          EXISTING=$(gh issue list --state open --label upstream-break \
+            --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY" \
+              --label upstream-break || \
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
+
+      - name: Close the issue once every source is healthy again
+        if: steps.smoke.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for N in $(gh issue list --state open --label upstream-break \
+                       --json number --jq '.[].number'); do
+            gh issue comment "$N" --body "All sources healthy again as of $(date -u). Closing."
+            gh issue close "$N"
+          done
+
+      - name: Fail the run so the badge turns red
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1

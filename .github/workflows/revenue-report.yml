@@ -1,0 +1,44 @@
+name: Weekly revenue report
+
+on:
+  schedule:
+    - cron: "0 13 * * 1" # Mondays
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Build report
+        id: report
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        run: python scripts/revenue_report.py | tee report.md
+
+      - name: Post the report to the tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Fedstack revenue tracker"
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" \
+            --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file report.md
+          else
+            gh issue create --title "$TITLE" --body-file report.md
+          fi
