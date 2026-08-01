@@ -1,14 +1,19 @@
 {
+  "$schema": "https://apify.com/schemas/v1/actor.ide.json",
   "actorSpecification": 1,
   "name": "federal-register-scraper",
-  "title": "Federal Register Scraper — Rules, Notices & Regulations API",
+  "title": "Federal Register Scraper \u2014 Rules, Notices & Regulations API",
   "description": "Extract Federal Register documents: proposed rules, final rules, notices and presidential documents, with agencies, dockets, RINs, CFR references, comment deadlines and effective dates.",
   "version": "0.1",
   "buildTag": "latest",
   "dockerfile": "../Dockerfile",
-  "input": "./input_schema.json",
+  "inputSchema": "./input_schema.json",
   "storages": {
     "dataset": "./dataset_schema.json"
   },
-  "categories": ["OPEN_SOURCE", "BUSINESS", "NEWS"]
+  "categories": [
+    "OPEN_SOURCE",
+    "BUSINESS",
+    "NEWS"
+  ]
 }

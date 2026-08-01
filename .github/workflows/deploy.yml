@@ -19,6 +19,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # The push waits on a Docker build; bound the job so it can never hang.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +28,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      # 22, not 20: apify-cli's transitive deps require >=20.17, and pinning the
+      # bare major "20" can resolve below that and emit EBADENGINE warnings.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install
         run: pip install -e ".[dev]"

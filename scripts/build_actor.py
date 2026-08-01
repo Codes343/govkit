@@ -46,7 +46,28 @@ def vendor(actor: Path) -> None:
 
 def push(actor: Path) -> None:
     # npx keeps apify-cli off the machine permanently and off the budget entirely.
-    cmd = ["npx", "-y", "apify-cli@latest", "push", "--no-prompt"]
+    #
+    # Pinned to the 1.x line rather than @latest: an unattended deploy pipeline
+    # should not silently pick up a new major version of its own tooling.
+    #
+    # --force: without it the CLI refuses when local files look older than what
+    #   is already on the platform, which a fresh CI checkout always does
+    #   (checkout sets mtime to clone time, not commit time).
+    # --wait-for-finish: block on the Docker build so a broken image fails the
+    #   workflow here, instead of appearing to deploy and then 404ing for a
+    #   customer. Bounded so the job can never hang.
+    #
+    # There is deliberately no --no-prompt: no such flag exists, and passing an
+    # unknown flag makes the CLI exit non-zero. `push` has no interactive
+    # prompts, so it is already CI-safe.
+    cmd = [
+        "npx",
+        "-y",
+        "apify-cli@1",
+        "push",
+        "--force",
+        "--wait-for-finish=600",
+    ]
     print(f"  $ {' '.join(cmd)}  (cwd={actor.name})")
     result = subprocess.run(cmd, cwd=actor, shell=sys.platform == "win32")
     if result.returncode != 0:

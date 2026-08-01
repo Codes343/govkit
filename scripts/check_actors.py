@@ -65,9 +65,14 @@ def check_actor(actor: Path) -> list[str]:
                 f"{actor.name}: actor.json name is {manifest.get('name')!r}, "
                 "which must equal the directory name"
             )
-        for key in ("title", "description", "version", "dockerfile", "input"):
+        for key in ("title", "description", "version", "dockerfile", "inputSchema"):
             if not manifest.get(key):
                 errors.append(f"{actor.name}: actor.json is missing {key!r}")
+        if "input" in manifest:
+            errors.append(
+                f"{actor.name}: actor.json uses the deprecated 'input' key; "
+                "rename it to 'inputSchema'"
+            )
         title = manifest.get("title") or ""
         # Apify Store truncates long titles in search results.
         if len(title) > 90:
