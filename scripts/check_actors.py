@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -113,6 +114,29 @@ def check_actor(actor: Path) -> list[str]:
         )
         if not has_main:
             errors.append(f"{actor.name}: src/main.py defines no `async def main()`")
+
+    # `apify push` uploads everything except what .gitignore matches. A vendored
+    # core that is missing, or present but git-ignored, deploys an Actor whose
+    # own library is absent - and that only surfaces as a customer-facing
+    # ModuleNotFoundError at run time. Catch both here.
+    vendored = actor / "src" / "govkit" / "__init__.py"
+    if not vendored.is_file():
+        errors.append(
+            f"{actor.name}: shared core not vendored. "
+            "Run `python scripts/build_actor.py`."
+        )
+    else:
+        ignored = subprocess.run(
+            ["git", "check-ignore", "-q", str(vendored)],
+            cwd=ROOT,
+            capture_output=True,
+        )
+        if ignored.returncode == 0:
+            errors.append(
+                f"{actor.name}: the vendored core is git-ignored, so `apify push` "
+                "would strip it out and the deployed Actor would fail at run time. "
+                "Remove the matching .gitignore rule."
+            )
 
     readme = (actor / "README.md").read_text(encoding="utf-8")
     if len(readme) < 800:

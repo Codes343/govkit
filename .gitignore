@@ -1,7 +1,10 @@
-# The shared core is vendored into each actor at build time by
-# scripts/build_actor.py. src/govkit is the single source of truth; the copies
-# must never be committed or they will drift.
-actors/*/src/govkit/
+# NOTE: actors/*/src/govkit/ is deliberately NOT ignored.
+#
+# `apify push` excludes anything matched by .gitignore. Ignoring the vendored
+# copies meant every actor was uploaded with its own core library stripped out.
+# So the copies are committed instead, and CI runs `build_actor.py` and fails on
+# any diff - drift is caught by the pipeline rather than prevented by omission.
+# src/govkit remains the single source of truth; never hand-edit a copy.
 
 .venv/
 

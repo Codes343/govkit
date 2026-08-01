@@ -31,3 +31,14 @@ jobs:
 
       - name: Verify every actor is deployable
         run: python scripts/check_actors.py
+
+      # The vendored copies of src/govkit are committed, because `apify push`
+      # strips anything .gitignore matches. Committed generated code can drift,
+      # so prove it hasn't.
+      - name: Verify vendored core is in sync
+        run: |
+          python scripts/build_actor.py
+          if ! git diff --exit-code --stat; then
+            echo "::error::Vendored core is stale. Run 'python scripts/build_actor.py' and commit the result."
+            exit 1
+          fi
