@@ -18,12 +18,18 @@ Go to <https://console.apify.com/sign-up>.
 - Sign up with GitHub or email.
 - **Do not** enter a credit card. The free plan gives $5/month of platform
   credit and that is all this business consumes.
-- When asked for a username, this becomes your Store profile URL
-  (`apify.com/<username>`), so pick one of these in order of preference:
+- When asked for a username, this becomes your public Store profile URL
+  (`apify.com/<username>`) and appears in **every actor link and Google
+  result**. Do not use your real name. Pick one of these in order:
   1. `govkit`
   2. `govkit-data`
-  3. `civicfeed`
-  4. `opengrid-data`
+  3. `govkitdata`
+  4. `getgovkit`
+
+**Already signed up with the wrong username?** Change it now, at
+Console → Settings → Account. It is editable, and nothing is published yet, so
+this is free. Once actors are public the URL is baked into every inbound link
+and search result, and renaming throws that away — so fix it before step 6.
 
 Write down which one you got — tell me and I'll update the READMEs and the
 cross-links between actors.
@@ -32,15 +38,59 @@ cross-links between actors.
 
 ## 2. Push this repo to GitHub — 5 min
 
-From `govkit/`:
+The commit already exists — you do **not** need `git init` or `git commit`
+again. ("nothing to commit, working tree clean" means it worked.)
+
+### 2a. Hide your email address first
+
+Your commits are currently authored with your real email, which is public in a
+public repo and gets scraped for spam. GitHub gives you a free alias.
+
+1. Go to <https://github.com/settings/emails>.
+2. Tick **Keep my email addresses private**.
+3. Copy the `xxxxxxx+username@users.noreply.github.com` address shown there.
+
+Then, from the `govkit/` folder, paste it into these commands:
 
 ```bash
-git init && git add -A && git commit -m "GovKit: federal open-data actors"
+git config user.email "PASTE_THE_NOREPLY_ADDRESS_HERE"
 ```
 
-Then create an empty repo on GitHub and push to it. A **public** repo is
-preferred: GitHub Actions minutes are unlimited on public repos, and the
-transparency is a mild trust signal for buyers of a data product.
+```bash
+git commit --amend --reset-author --no-edit
+```
+
+### 2b. Create the empty repo
+
+1. Go to <https://github.com/new>.
+2. **Repository name:** `govkit`
+3. **Public** — GitHub Actions minutes are unlimited on public repos (private
+   ones get 2,000/month), and an auditable repo is a mild trust signal to
+   someone buying a data product.
+4. Leave **every** checkbox unticked — no README, no .gitignore, no license.
+   The repo must be empty or the push will be rejected.
+5. Click **Create repository**.
+
+### 2c. Push
+
+GitHub will show you a "push an existing repository" snippet. It is these two
+commands — replace `YOUR_USERNAME` with your GitHub username:
+
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/govkit.git
+```
+
+```bash
+git branch -M master && git push -u origin master
+```
+
+If it asks for a password, that is **not** your GitHub password — it wants a
+token. Easiest path: install GitHub CLI (`winget install GitHub.cli`), run
+`gh auth login`, and push again. Otherwise create a token at
+<https://github.com/settings/tokens> with the `repo` scope and paste that as
+the password.
+
+You should now see all 41 files on github.com.
 
 ---
 
