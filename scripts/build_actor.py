@@ -44,30 +44,37 @@ def vendor(actor: Path) -> None:
     print(f"  vendored core -> {target.relative_to(ROOT)}")
 
 
+def _apify_cmd() -> list[str]:
+    """Locate the Apify CLI.
+
+    IMPORTANT: whichever form is used, the CLI must already be *logged in*.
+    Setting an APIFY_TOKEN environment variable is NOT sufficient - `apify push`
+    reads credentials written by `apify login`, and three deploys failed before
+    that was understood. CI handles this with apify/setup-apify-cli-action;
+    locally, run `apify login` once.
+    """
+    if shutil.which("apify"):
+        return ["apify"]
+    # Fallback for a machine without the CLI installed. npx keeps it off the
+    # system permanently and off the budget entirely. Pinned to the 1.x line
+    # rather than @latest so an unattended pipeline cannot pick up a new major
+    # version of its own tooling.
+    return ["npx", "-y", "apify-cli@1"]
+
+
 def push(actor: Path) -> None:
-    # npx keeps apify-cli off the machine permanently and off the budget entirely.
-    #
-    # Pinned to the 1.x line rather than @latest: an unattended deploy pipeline
-    # should not silently pick up a new major version of its own tooling.
-    #
     # --force: without it the CLI refuses when local files look older than what
     #   is already on the platform, which a fresh CI checkout always does
     #   (checkout sets mtime to clone time, not commit time).
     # --wait-for-finish: block on the Docker build so a broken image fails the
-    #   workflow here, instead of appearing to deploy and then 404ing for a
-    #   customer. Bounded so the job can never hang.
+    #   pipeline here, instead of appearing to deploy and then failing in front
+    #   of a customer. An explicit value is required - the bare flag is
+    #   ambiguous to the parser and swallows the next argument.
     #
     # There is deliberately no --no-prompt: no such flag exists, and passing an
     # unknown flag makes the CLI exit non-zero. `push` has no interactive
     # prompts, so it is already CI-safe.
-    cmd = [
-        "npx",
-        "-y",
-        "apify-cli@1",
-        "push",
-        "--force",
-        "--wait-for-finish=600",
-    ]
+    cmd = [*_apify_cmd(), "push", "--force", "--wait-for-finish=600"]
     print(f"  $ {' '.join(cmd)}  (cwd={actor.name})")
     result = subprocess.run(cmd, cwd=actor, shell=sys.platform == "win32")
     if result.returncode != 0:

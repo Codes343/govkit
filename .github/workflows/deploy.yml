@@ -2,6 +2,7 @@ name: Deploy actors
 
 # Push to master -> every actor is rebuilt and redeployed to Apify. There is no
 # manual deploy step, because there is no human to perform one.
+#
 # No `paths:` filter here on purpose. It saved nothing (Actions minutes are
 # unlimited on public repos, and nearly every commit touches src/ or actors/
 # anyway) and it cost something real: GitHub only indexes a workflow once a push
@@ -16,10 +17,14 @@ on:
         description: "Deploy only this actor (blank = all)"
         required: false
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # The push waits on a Docker build; bound the job so it can never hang.
+    # The push blocks on a Docker build; bound the job so it can never hang.
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -27,12 +32,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      # 22, not 20: apify-cli's transitive deps require >=20.17, and pinning the
-      # bare major "20" can resolve below that and emit EBADENGINE warnings.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
 
       - name: Install
         run: pip install -e ".[dev]"
@@ -52,12 +51,61 @@ jobs:
             exit 1
           fi
 
+      # `apify push` requires an authenticated CLI - an APIFY_TOKEN environment
+      # variable alone is NOT enough, which is what broke three earlier deploys.
+      # This is Apify's own action: it installs the CLI and runs the login.
+      - uses: apify/setup-apify-cli-action@v1
+        with:
+          token: ${{ secrets.APIFY_TOKEN }}
+
       - name: Vendor core and push to Apify
-        env:
-          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+        id: push
+        continue-on-error: true
         run: |
+          set -o pipefail
           if [ -n "${{ inputs.actor }}" ]; then
-            python scripts/build_actor.py --actor "${{ inputs.actor }}" --push
+            python scripts/build_actor.py --actor "${{ inputs.actor }}" --push 2>&1 | tee deploy.log
           else
-            python scripts/build_actor.py --push
+            python scripts/build_actor.py --push 2>&1 | tee deploy.log
           fi
+
+      # A deploy failure is the most expensive failure this business has: it
+      # silently stops shipping fixes. File it like the smoke test does, so it
+      # is visible without anyone watching the Actions tab.
+      - name: Report a failed deploy
+        if: steps.push.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Deploy to Apify is failing"
+          BODY="Deploy failed on \`${{ github.sha }}\`.
+
+          \`\`\`
+          $(tail -c 8000 deploy.log)
+          \`\`\`
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" \
+            --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
+
+      - name: Close the deploy issue once a deploy succeeds
+        if: steps.push.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for N in $(gh issue list --state open --search "Deploy to Apify is failing in:title" \
+                       --json number --jq '.[].number'); do
+            gh issue comment "$N" --body "Deploy succeeded on \`${{ github.sha }}\`. Closing."
+            gh issue close "$N"
+          done
+
+      - name: Fail the run if the deploy failed
+        if: steps.push.outcome == 'failure'
+        run: exit 1
